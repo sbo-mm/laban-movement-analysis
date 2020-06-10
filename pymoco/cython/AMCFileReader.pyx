@@ -780,7 +780,10 @@ cdef class CyAMCParser(CyAcclaimParser):
         if self.amc_params:
             free(self.amc_params)
               
-        
+
+cdef float METER_SCALE = 0.056444
+
+
 cdef class CyAcclaimHandler:
     
     cdef:
@@ -887,7 +890,7 @@ cdef class CyAcclaimHandler:
         P = matmul3x1(M, child.direction)
 
         for i in range(3):
-            pos[i] = parent_pos[i] + child.length * P[i]
+            pos[i] = parent_pos[i] + (child.length * METER_SCALE) * P[i]
             v[child.joint_id, i] = pos[i]
 
         if P: free(P)
@@ -909,7 +912,7 @@ cdef class CyAcclaimHandler:
         
         cdef int i
         for i in range(3):
-            pos[i] = root_data.data[i]
+            pos[i] = root_data.data[i] * METER_SCALE
             rot[i] = root_data.data[i + 3]
             v[0, i] = pos[i]
 
